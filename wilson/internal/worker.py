@@ -7,6 +7,7 @@
     see https://www.birdbraintechnologies.com/
 '''
 from threading import Thread, Event, current_thread
+from importlib import import_module
 from wilson.internal.device import Device
 from wilson.internal.status import Status
 from wilson.internal.command import Command
@@ -57,6 +58,8 @@ class Worker():
 
   def __runMainCode(self):
     debug("WORKER runMainCode", self.sourceId)
+    '''
+    # This did not support functions defs!
     mainLines = None
     
     with open(self.runModule + ".py", "r") as mainFile:
@@ -64,6 +67,8 @@ class Worker():
     mainCode = "".join(mainLines)
 
     exec(mainCode)
+    '''
+    import_module(self.runModule)
 
     self.queueCommand(Command(0, "done", None))
     Worker.workers.pop(self.sourceId)
